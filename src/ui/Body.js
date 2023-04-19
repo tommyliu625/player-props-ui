@@ -23,9 +23,7 @@ import { Typography } from '@mui/material';
 import { findAvgStats, findAvgStatsForGames } from '../util/helperFunctions';
 
 export const Body = () => {
-
   const [selectedPlayer, setSelectedPlayer] = useState({});
-
   const [selectedTeam, setSelectedTeam] = useState({});
   const [opposingTeamForPlayers, setOpposingTeamForPlayers] = useState({});
   const [opposingTeamForGames, setOpposingTeamForGames] = useState({});
@@ -35,17 +33,34 @@ export const Body = () => {
 
   const [gamesOrPlayersFlag, setGamesOrPlayersFlag] = useState('players');
 
-  const [playerInfo, teamInfo] = useTeamAndPlayersInfo()
-
-  const [playerStats, setPlayerStats] = usePlayerStats(gamesOrPlayersFlag, selectedPlayer, opposingTeamForPlayers)
-
-  const [gameStats, setGameStats] = useGameStats(gamesOrPlayersFlag, selectedTeam, opposingTeamForGames);
-
   useEffect(() => {
     setSelectedPlayer({});
     setSelectedTeam({});
-  }, [gamesOrPlayersFlag])
+    setOpposingTeamForGames({});
+    setOpposingTeamForPlayers({});
+  }, [gamesOrPlayersFlag]);
 
+  useEffect(() => {
+    if (Object.keys(selectedPlayer).length === 0) setOpposingTeamForPlayers({});
+  }, [selectedPlayer]);
+
+  useEffect(() => {
+    if (Object.keys(selectedTeam).length === 0) setOpposingTeamForGames({});
+  }, [selectedTeam]);
+
+  const [playerInfo, teamInfo] = useTeamAndPlayersInfo()
+
+  const [playerStats, setPlayerStats, isFetchingPlayerStats] = usePlayerStats(
+    gamesOrPlayersFlag,
+    selectedPlayer,
+    opposingTeamForPlayers
+  );
+
+  const [gameStats, setGameStats, isFetchingGameStats] = useGameStats(
+    gamesOrPlayersFlag,
+    selectedTeam,
+    opposingTeamForGames
+  );
   return (
     <>
       <div className='body-content'>
@@ -129,9 +144,15 @@ export const Body = () => {
         )}
       <div className='player-props-table'>
         {gamesOrPlayersFlag === PLAYERS_CONSTANT ? (
-          <GamesGrid playerStats={playerStats} />
+          <PlayersGrid
+            playerStats={playerStats}
+            isFetchingPlayerStats={isFetchingPlayerStats}
+          />
         ) : (
-          <PlayersGrid gameStats={gameStats} />
+          <GamesGrid
+            gameStats={gameStats}
+            isFetchingGameStats={isFetchingGameStats}
+          />
         )}
       </div>
     </>

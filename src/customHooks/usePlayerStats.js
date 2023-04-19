@@ -5,6 +5,7 @@ import { LOCAL_HOST, PLAYER_STATS_API, PLAYERS_CONSTANT } from '../constants/pro
 
 export const usePlayerStats = (gamesOrPlayersFlag, selectedPlayer, opposingTeam) => {
   const [playerStats, setPlayerStats] = useState([]);
+  const [isFetchingPlayerStats, setIsFetchingPlayerStats] = useState(false);
   useEffect(() => {
     async function getPlayerStats() {
       const playerStatsUrl = LOCAL_HOST + PLAYER_STATS_API;
@@ -12,7 +13,9 @@ export const usePlayerStats = (gamesOrPlayersFlag, selectedPlayer, opposingTeam)
       addSelectedPlayer(request, selectedPlayer);
       addOpposingTeam(request, opposingTeam);
       console.log('request: ', request)
+      setIsFetchingPlayerStats(true);
       const {data} = await axios.post(playerStatsUrl, request)
+      setIsFetchingPlayerStats(false);
       const mappedData = mapPlayerStats(data);
       setPlayerStats(mappedData);
     }
@@ -20,7 +23,7 @@ export const usePlayerStats = (gamesOrPlayersFlag, selectedPlayer, opposingTeam)
       getPlayerStats();
     }
   }, [gamesOrPlayersFlag, selectedPlayer, opposingTeam])
-  return [playerStats, setPlayerStats];
+  return [playerStats, setPlayerStats, isFetchingPlayerStats];
 };
 
 function addWhereClause(request, condition) {

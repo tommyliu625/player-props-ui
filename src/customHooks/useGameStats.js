@@ -9,6 +9,7 @@ export const useGameStats = (
   opposingTeamForGames
 ) => {
   const [gameStats, setGameStats] = useState([]);
+  const [isFetchingGameStats, setIsFetchingGameStats] = useState(false);
 
   useEffect(() => {
     async function getGameStats() {
@@ -19,7 +20,9 @@ export const useGameStats = (
       if (Object.keys(opposingTeamForGames).length > 0) {
         mappedData = addOpposingTeam([...gameStats] ,opposingTeamForGames);
       } else {
+        setIsFetchingGameStats(true);
         let response = await axios.post(gameInfoUrl, request);
+        setIsFetchingGameStats(false);
         mappedData = mapGameStats(response.data);
       }
       setGameStats(mappedData);
@@ -28,7 +31,7 @@ export const useGameStats = (
       getGameStats();
     }
   }, [gamesOrPlayersFlag, selectedTeam, opposingTeamForGames]);
-  return [gameStats, setGameStats];
+  return [gameStats, setGameStats, isFetchingGameStats];
 };
 
 function addSelectedTeam(request,selectedTeam) {
