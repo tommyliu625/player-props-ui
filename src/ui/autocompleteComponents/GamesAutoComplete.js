@@ -2,7 +2,12 @@ import React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export const GamesAutoComplete = ({ teamInfo, setSelectedTeam, label }) => {
+export const GamesAutoComplete = ({
+  teamInfo,
+  setSelectedTeam,
+  label,
+  resetGameStates,
+}) => {
   return (
     <Autocomplete
       key='games-auto-complete'
@@ -10,11 +15,24 @@ export const GamesAutoComplete = ({ teamInfo, setSelectedTeam, label }) => {
       id='games-auto-complete'
       options={teamInfo}
       sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label={label} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          // InputLabelProps={{ shrink: true }}
+          label={label}
+        />
+      )}
       onChange={(event, value, reason) => {
-        setSelectedTeam(value ?? {});
+        if (resetGameStates !== undefined) {
+          if (value === null) {
+            resetGameStates();
+          } else {
+            setSelectedTeam(value ?? {});
+          }
+        } else {
+          setSelectedTeam(value ?? {});
+        }
       }}
-
     />
   );
 };

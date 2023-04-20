@@ -2,7 +2,11 @@ import React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export const PlayersAutoComplete = ({playerInfo, setSelectedPlayer}) => {
+export const PlayersAutoComplete = ({
+  playerInfo,
+  setSelectedPlayer,
+  resetPlayerStates,
+}) => {
   return (
     <>
       <Autocomplete
@@ -11,9 +15,19 @@ export const PlayersAutoComplete = ({playerInfo, setSelectedPlayer}) => {
         id='players-auto-complete'
         options={playerInfo}
         sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label='NBA Players' />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            // InputLabelProps={{ shrink: true }}
+            label='NBA Players'
+          />
+        )}
         onChange={(event, value, reason) => {
-          setSelectedPlayer(value ?? {});
+          if (value === null) {
+            resetPlayerStates();
+          } else {
+            setSelectedPlayer(value);
+          }
         }}
       />
     </>

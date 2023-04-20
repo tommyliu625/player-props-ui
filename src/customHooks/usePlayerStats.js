@@ -1,9 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { mapPlayerStats, createRequestBody } from '../util/mappingUtil';
 import { LOCAL_HOST, PLAYER_STATS_API, PLAYERS_CONSTANT } from '../constants/propConstants';
 
-export const usePlayerStats = (gamesOrPlayersFlag, selectedPlayer, opposingTeam) => {
+export const usePlayerStats = (
+  gamesOrPlayersFlag,
+  selectedPlayer,
+  opposingTeam,
+  dates
+) => {
   const [playerStats, setPlayerStats] = useState([]);
   const [isFetchingPlayerStats, setIsFetchingPlayerStats] = useState(false);
   useEffect(() => {
@@ -12,9 +18,9 @@ export const usePlayerStats = (gamesOrPlayersFlag, selectedPlayer, opposingTeam)
       const request = createRequestBody();
       addSelectedPlayer(request, selectedPlayer);
       addOpposingTeam(request, opposingTeam);
-      console.log('request: ', request)
+      addDates(request, dates);
       setIsFetchingPlayerStats(true);
-      const {data} = await axios.post(playerStatsUrl, request)
+      const { data } = await axios.post(playerStatsUrl, request);
       setIsFetchingPlayerStats(false);
       const mappedData = mapPlayerStats(data);
       setPlayerStats(mappedData);
@@ -22,7 +28,7 @@ export const usePlayerStats = (gamesOrPlayersFlag, selectedPlayer, opposingTeam)
     if (gamesOrPlayersFlag === PLAYERS_CONSTANT) {
       getPlayerStats();
     }
-  }, [gamesOrPlayersFlag, selectedPlayer, opposingTeam])
+  }, [selectedPlayer, opposingTeam, dates]);
   return [playerStats, setPlayerStats, isFetchingPlayerStats];
 };
 
@@ -48,27 +54,9 @@ function addOpposingTeam(request, opposingTeam) {
   }
 }
 
-
-// function addSelectedPlayer(request, selectedPlayer) {
-//   if (selectedPlayer.player_id !== null) {
-//     request['where'] = {
-//       and: {
-//         player_id: selectedPlayer.player_id,
-//       },
-//     };
-//   }
-// }
-
-// function addOpposingTeam(request, opposingTeam) {
-//   if (opposingTeam.opposing_team_id != null) {
-//     if (request['where']['and']) {
-//       request['where']['and'] = {...request['where']['and'],
-//       opposing_team_id: opposingTeam.opposing_team_id
-//       }
-//     } else {
-//       request['where'] = {
-//         and: { opposing_team_id: opposingTeam.opposing_team_id },
-//       };
-//     }
-//   }
-// }
+function addDates(request, dates) {
+  if (dates.length > 0) {
+    request['start_date'] = dates[0];
+    request['end_date'] = dates[1];
+  }
+}

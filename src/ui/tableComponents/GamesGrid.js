@@ -17,21 +17,22 @@ export const GamesGrid = ({ gameStats, isFetchingGameStats }) => {
   //   handleDataRefresh();
   // }, [gameStats]);
   return (
-    <Box sx={{ height: '850px', width: '100%' }}>
+    <Box sx={{ height: '725px', width: '100%' }}>
       {isFetchingGameStats ? (
         <CircularProgress />
       ) : (
         <DataGrid
           rows={gameStats}
           columns={gameStatsColDef()}
+          sx={{ display: 'flex', flexDirection: 'column-reverse' }}
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 15,
+                pageSize: 25,
               },
             },
           }}
-          pageSizeOptions={[15]}
+          pageSizeOptions={[10, 25, 50]}
           // checkboxSelection
           disableRowSelectionOnClick
           ref={gridRef}

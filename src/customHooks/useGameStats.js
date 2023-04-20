@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect, useState} from 'react';
 import { LOCAL_HOST,GAMES_CONSTANT, GAME_INFO_API } from '../constants/propConstants';
 import axios from 'axios';
@@ -6,7 +7,8 @@ import { mapGameStats, createRequestBody } from '../util/mappingUtil';
 export const useGameStats = (
   gamesOrPlayersFlag,
   selectedTeam,
-  opposingTeamForGames
+  opposingTeamForGames,
+  dates
 ) => {
   const [gameStats, setGameStats] = useState([]);
   const [isFetchingGameStats, setIsFetchingGameStats] = useState(false);
@@ -16,9 +18,10 @@ export const useGameStats = (
       const gameInfoUrl = LOCAL_HOST + GAME_INFO_API;
       const request = createRequestBody();
       addSelectedTeam(request, selectedTeam);
+      addDates(request, dates)
       let mappedData;
       if (Object.keys(opposingTeamForGames).length > 0) {
-        mappedData = addOpposingTeam([...gameStats] ,opposingTeamForGames);
+        mappedData = addOpposingTeam([...gameStats], opposingTeamForGames);
       } else {
         setIsFetchingGameStats(true);
         let response = await axios.post(gameInfoUrl, request);
@@ -30,7 +33,11 @@ export const useGameStats = (
     if (gamesOrPlayersFlag === GAMES_CONSTANT) {
       getGameStats();
     }
-  }, [gamesOrPlayersFlag, selectedTeam, opposingTeamForGames]);
+  }, [
+    selectedTeam,
+    opposingTeamForGames,
+    dates
+  ]);
   return [gameStats, setGameStats, isFetchingGameStats];
 };
 
@@ -53,4 +60,11 @@ function addOpposingTeam(gameStats, opposingTeamForGames) {
       opposingTeamForGames.full_name === at_full_name
     );
   })
+}
+
+function addDates(request, dates) {
+  if (dates.length > 0) {
+    request['start_date'] = dates[0];
+    request['end_date'] = dates[1]
+  }
 }

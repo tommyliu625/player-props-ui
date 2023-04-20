@@ -1,6 +1,7 @@
 import './App.css';
 import { HomePage } from './ui/HomePage';
-import { ChakraProvider } from '@chakra-ui/react';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
 function App() {
   return (

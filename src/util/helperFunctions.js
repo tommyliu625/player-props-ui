@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export function findAvgStats(playerStats, numGames, setActualGames, setPlayerStats) {
   let start = 0;
   if (playerStats[0].id === 'Avg') start = 1;
@@ -117,4 +119,8 @@ export function findAvgStatsForGames(
   } else {
     setGameStats((stats) => [avgRecord, ...stats.slice(1, avgRecord.length)]);
   }
+}
+
+export function dateString(momentDate) {
+  return moment(momentDate).format('YYYY-MM-DD');
 }

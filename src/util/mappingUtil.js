@@ -101,7 +101,7 @@ export function playerStatsColDef() {
         editable: false,
       },
     ];
-    
+
   return colDefs;
 }
 
