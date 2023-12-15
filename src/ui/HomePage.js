@@ -6,7 +6,7 @@ import { Body } from './Body';
 export const HomePage = () => {
   return (
     <div>
-      <NavBar />
+      {/* <NavBar /> */}
       <Body />
     </div>
   );

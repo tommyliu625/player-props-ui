@@ -54,18 +54,25 @@ export const Body = () => {
 
   const [playerInfo, teamInfo] = useTeamAndPlayersInfo();
 
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 50,
+  });
+
   const [playerStats, setPlayerStats, isFetchingPlayerStats] = usePlayerStats(
     gamesOrPlayersFlag,
     selectedPlayer,
     opposingTeamForPlayers,
-    dates
+    dates,
+    paginationModel
   );
 
   const [gameStats, setGameStats, isFetchingGameStats] = useGameStats(
     gamesOrPlayersFlag,
     selectedTeam,
     opposingTeamForGames,
-    dates
+    dates,
+    paginationModel
   );
 
   function applyDates() {
@@ -195,11 +202,19 @@ export const Body = () => {
           <PlayersGrid
             playerStats={playerStats}
             isFetchingPlayerStats={isFetchingPlayerStats}
+            dates={dates}
+            selectedPlayer={selectedPlayer}
+            paginationModel={paginationModel}
+            setPaginationModel={setPaginationModel}
           />
         ) : (
           <GamesGrid
             gameStats={gameStats}
             isFetchingGameStats={isFetchingGameStats}
+            dates={dates}
+            selectedPlayer={selectedTeam}
+            paginationModel={paginationModel}
+            setPaginationModel={setPaginationModel}
           />
         )}
       </div>

@@ -8,7 +8,8 @@ export const useGameStats = (
   gamesOrPlayersFlag,
   selectedTeam,
   opposingTeamForGames,
-  dates
+  dates,
+  paginationModel
 ) => {
   const [gameStats, setGameStats] = useState([]);
   const [isFetchingGameStats, setIsFetchingGameStats] = useState(false);
@@ -19,6 +20,7 @@ export const useGameStats = (
       const request = createRequestBody();
       addSelectedTeam(request, selectedTeam);
       addDates(request, dates)
+      addPagination(request, paginationModel)
       let mappedData;
       if (Object.keys(opposingTeamForGames).length > 0) {
         mappedData = addOpposingTeam([...gameStats], opposingTeamForGames);
@@ -36,10 +38,16 @@ export const useGameStats = (
   }, [
     selectedTeam,
     opposingTeamForGames,
-    dates
+    dates,
+    paginationModel
   ]);
   return [gameStats, setGameStats, isFetchingGameStats];
 };
+
+function addPagination(request, paginationModel) {
+  request['offset'] = paginationModel.page * paginationModel.pageSize;
+  request['limit'] = paginationModel.pageSize;
+}
 
 function addSelectedTeam(request,selectedTeam) {
   if (Object.keys(selectedTeam).length > 0) {

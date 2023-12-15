@@ -29,7 +29,12 @@ export function findAvgStats(playerStats, numGames, setActualGames, setPlayerSta
     pts: 0,
     rbs: 0,
     asts: 0,
+    fgm: 0,
+    fga: 0,
     fg3m: 0,
+    fg3a: 0,
+    ftm: 0,
+    fta: 0,
     blks: 0,
     stls: 0,
     tos: 0,
@@ -39,7 +44,7 @@ export function findAvgStats(playerStats, numGames, setActualGames, setPlayerSta
   let count = 0;
 
   for (let i = start; i < playerStats.length + start; i++) {
-    const { pts, rbs, asts, fg3m, blks, stls, tos } = playerStats[i];
+    const { pts, rbs, asts, fgm, fga, fg3m, fg3a, ftm, fta, blks, stls, tos } = playerStats[i];
     if (
       pts !== 0 ||
       rbs !== 0 ||
@@ -52,7 +57,12 @@ export function findAvgStats(playerStats, numGames, setActualGames, setPlayerSta
       avgRecord.pts += pts / avgGame;
       avgRecord.rbs += rbs / avgGame;
       avgRecord.asts += asts / avgGame;
+      avgRecord.fgm += fgm / avgGame;
+      avgRecord.fga += fga / avgGame;
       avgRecord.fg3m += fg3m / avgGame;
+      avgRecord.fg3a += fg3a / avgGame;
+      avgRecord.ftm += ftm / avgGame;
+      avgRecord.fta += fta / avgGame;
       avgRecord.blks += blks / avgGame;
       avgRecord.stls += stls / avgGame;
       avgRecord.tos += tos / avgGame;
@@ -62,7 +72,12 @@ export function findAvgStats(playerStats, numGames, setActualGames, setPlayerSta
       avgRecord.pts = avgRecord.pts.toFixed(2);
       avgRecord.rbs = avgRecord.rbs.toFixed(2);
       avgRecord.asts = avgRecord.asts.toFixed(2);
+      avgRecord.fgm = avgRecord.fgm.toFixed(2);
+      avgRecord.fga = avgRecord.fga.toFixed(2);
       avgRecord.fg3m = avgRecord.fg3m.toFixed(2);
+      avgRecord.fg3a = avgRecord.fg3a.toFixed(2);
+      avgRecord.ftm = avgRecord.ftm.toFixed(2);
+      avgRecord.fta = avgRecord.fta.toFixed(2);
       avgRecord.blks = avgRecord.blks.toFixed(2);
       avgRecord.stls = avgRecord.stls.toFixed(2);
       avgRecord.tos = avgRecord.tos.toFixed(2);
@@ -82,7 +97,7 @@ export function findAvgStatsForGames(
   setActualGames,
   setGameStats,
   selectedTeam
-  ) {
+) {
   let start = 0;
   if (gameStats[0].id === 'Avg') start = 1;
   let actualGames = numGames > gameStats.length - start ? gameStats.length - start : numGames
@@ -102,7 +117,7 @@ export function findAvgStatsForGames(
   let count = 0;
 
   for (let i = start; i < actualGames + start; i++) {
-    const {game_id, date, ht_id, ht_abbreviation, ht_city, ht_conference, ht_division, ht_full_name, ht_score, at_id, at_abbreviation, at_city, at_conference, at_division, at_full_name, at_score, postseason, season} = gameStats[i];
+    const { game_id, date, ht_id, ht_abbreviation, ht_city, ht_conference, ht_division, ht_full_name, ht_score, at_id, at_abbreviation, at_city, at_conference, at_division, at_full_name, at_score, postseason, season } = gameStats[i];
     if (ht_full_name === selectedTeam.full_name) {
       avgRecord.at_score += (ht_score / actualGames);
     } else {
@@ -123,4 +138,16 @@ export function findAvgStatsForGames(
 
 export function dateString(momentDate) {
   return moment(momentDate).format('YYYY-MM-DD');
+}
+
+export function getDateTimeNow() {
+  const currentDate = new Date();
+
+  // Get individual components of the date and time
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  const hours = String(currentDate.getHours()).padStart(2, '0');
+  const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}`
 }
