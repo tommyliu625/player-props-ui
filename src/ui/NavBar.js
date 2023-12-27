@@ -7,7 +7,8 @@ export const NavBar = ({setSelectedPage}) => {
     <div className='header'>
       <div className='title'>
         <Link to="/">Player Props</Link>
-        <Link to="/projections">Prize Pricks Projections</Link>
+        <Link to="/prize-picks-projections">Prize Picks Projections</Link>
+        <Link to="/underdog-projections">Underdog Projections</Link>
         {/* <div onClick={() => setSelectedPage("Home")}>Player Props</div>
         <div onClick={() => setSelectedPage("PrizePicks")}>Prize Pricks Projections</div> */}
       </div>

@@ -4,20 +4,25 @@ import Box from '@mui/material/Box';
 import InputBase from '@mui/material/InputBase';
 import ArrowRightAltSharpIcon from '@mui/icons-material/ArrowRightAltSharp';
 import IconButton from '@mui/material/IconButton';
-import { LOCAL_HOST, UPLOAD_JSON_TO_S3_API, PRIZE_PICK_NBA_API } from '../../constants/propConstants';
-import './PlayerProjection.css'
-import PlayerProjectionTable from './PlayerProjectionTable';
-import { getDateTimeNow } from '../../util/helperFunctions';
+import { LOCAL_HOST, UNDERDOG_S3_UPLOAD, UNDERDOG_NBA_API } from '../../../constants/propConstants';
+import '../PlayerProjection.css'
+import UnderdogProjectionTable from './UnderdogProjectionTable';
 
-function PlayerProjectionPage() {
+function UnderdogProjectionPage() {
 
     const handleSubmit = async (e) => {
         setLoading(true)
         e.preventDefault();
         try {
-            let res = axios.post(LOCAL_HOST + UPLOAD_JSON_TO_S3_API, JSON.parse(inputValue));
-            setUploadMessage(`Successful Upload on ${getDateTimeNow()}`);
+            let {data} = await axios.post(LOCAL_HOST + UNDERDOG_S3_UPLOAD, JSON.parse(inputValue));        
+            console.log('data: ', data)
+            if (data.status) {
+                setUploadMessage(`Successfully uploaded at ${data.lastUpdated}`);                
+            } else {
+                setUploadMessage('Failed Upload')
+            }
         } catch (err) {
+            console.log('err: ', err)
             setUploadMessage('Failed Upload')
 
         } finally {
@@ -44,14 +49,14 @@ function PlayerProjectionPage() {
 
     return (
         <div>
-            <p>To get latest projections go to this link and paste the json object in the text box below: <a target="blank" href={PRIZE_PICK_NBA_API}>{PRIZE_PICK_NBA_API}</a>
+            <p>To get latest projections go to this link and paste the json object in the text box below: <a target="blank" href={UNDERDOG_NBA_API}>{UNDERDOG_NBA_API}</a>
               <p>{uploadMessage}</p>
             </p>             
             <Box className={loading ? 'input-styling-loading' : 'input-styling'}>
 
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
-                    placeholder='Send a message'
+                    placeholder='Place Projections JSON Here'
                     rows={4}
                     multiline
                     onChange={(e) => setInputValue(e.target.value)}
@@ -67,9 +72,9 @@ function PlayerProjectionPage() {
                     <ArrowRightAltSharpIcon />
                 </IconButton>
             </Box>
-             <PlayerProjectionTable uploadMessage={uploadMessage}/>            
+             <UnderdogProjectionTable uploadMessage={uploadMessage}/>            
         </div >
     );
 }
 
-export default PlayerProjectionPage;
+export default UnderdogProjectionPage;

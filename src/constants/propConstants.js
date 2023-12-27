@@ -2,9 +2,9 @@
 // export const LOCAL_HOST =
 // 'http://player-props-co.us-east-1.elasticbeanstalk.com/api/v1/';
 
-// export const LOCAL_HOST = 'http://localhost:5000/api/v1/';
+export const LOCAL_HOST = 'http://localhost:5000/api/v1/';
 
-export const LOCAL_HOST = "api/v1/"
+// export const LOCAL_HOST = "api/v1/"
 
 export const PLAYER_INFO_API = 'player-info-data';
 
@@ -12,15 +12,23 @@ export const PLAYER_STATS_API = 'player-game-info-data';
 
 export const PLAYER_PROPS_API = 'fetch-player-props';
 
-export const PLAYER_PROPS_AGAINST_OPPONENT_API = 'fetch-props-against-opponent';
+export const PLAYER_PROPS_AGAINST_OPPONENT_PRIZE_PICKS_API = 'fetch-props-against-opponent-prize-picks';
+
+export const PLAYER_PROPS_AGAINST_OPPONENT_UNDERDOG_API = 'fetch-props-against-opponent-underdog';
 
 export const TEAM_INFO_API = 'team-info-data';
 
-export const UPLOAD_JSON_TO_S3_API = 'upload-json-to-s3';
+export const PRIZE_PICKS_S3_UPLOAD = 'upload-prize-picks-json';
 
-export const FETCH_PLAYER_PROJECTION = 'fetch-player-projections';
+export const UNDERDOG_S3_UPLOAD = 'upload-underdog-json';
+
+export const FETCH_PRIZE_PICKS_PROJECTION = 'fetch-prize-picks-projections';
+
+export const FETCH_UNDERDOG_PICKS_PROJECTION = 'fetch-underdog-projections';
 
 export const PRIZE_PICK_NBA_API = "https://api.prizepicks.com/projections?league_id=7&per_page=10000&single_stat=true"
+
+export const UNDERDOG_NBA_API = "https://api.underdogfantasy.com/beta/v5/over_under_lines"
 
 export const GAME_INFO_API = 'games-info-data';
 

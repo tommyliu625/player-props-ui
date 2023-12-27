@@ -61,56 +61,58 @@ export function mapPlayerStats(data) {
 export function playerStatsColDef() {
   const colDefs = [
     { field: 'id', headerName: 'ID', width: 90 },
-    { field: 'date', headerName: 'Date', width: 100, editable: false },
+    { field: 'date', headerName: 'Date', width: 100, editable: false, selected: true },
     {
       field: 'first_name',
       headerName: 'First Name',
       width: 120,
-      editable: false,
+      editable: false, selected: true
     },
     {
       field: 'last_name',
       headerName: 'Last Name',
       width: 120,
-      editable: false,
+      editable: false, selected: true
     },
     { field: 'position', headerName: 'Position', width: 80, editable: false },
     {
       field: 'full_name',
       headerName: 'Team Name',
       width: 200,
-      editable: false,
+      editable: false, selected: true
     },
-    { field: 'pts', headerName: 'Points', width: 85, editable: false },
-    { field: 'rbs', headerName: 'Rebounds', width: 85, editable: false },
-    { field: 'asts', headerName: 'Assists', width: 85, editable: false },
-    { field: 'blks', headerName: 'Blocks', width: 85, editable: false },
-    { field: 'stls', headerName: 'Steals', width: 85, editable: false },
-    { field: 'tos', headerName: 'Turnovers', width: 85, editable: false },
-    { field: 'ft_pct', headerName: 'FT %', width: 85, editable: false },
-    { field: 'fgm', headerName: 'FG Made', width: 85, editable: false },
-    { field: 'fga', headerName: 'FG Attempted', width: 85, editable: false },
+    { field: 'pts', headerName: 'Points', fit: 85, editable: false, selected: true },
+    { field: 'rbs', headerName: 'Rebounds', width: 85, editable: false, selected: true },
+    { field: 'asts', headerName: 'Assists', width: 85, editable: false, selected: true },
+    { field: 'blks', headerName: 'Blocks', width: 85, editable: false, selected: true },
+    { field: 'stls', headerName: 'Steals', width: 85, editable: false, selected: true },
+    { field: 'tos', headerName: 'Turnovers', width: 85, editable: false , selected: true},
+    { field: 'fgm', headerName: 'FG Made', width: 85, editable: false, selected: true },
+    { field: 'fga', headerName: 'FG Att.', width: 85, editable: false, selected: true },
     { field: 'fg_pct', headerName: 'FG %', width: 85, editable: false },
-    { field: 'fg3m', headerName: '3s Made', width: 85, editable: false },
-    { field: 'fg3a', headerName: '3s Attempted', width: 85, editable: false },
-    { field: 'fg3_pct', headerName: '3pt %', width: 85, editable: false },
-    { field: 'ftm', headerName: 'FT Made', width: 85, editable: false },
-    { field: 'fta', headerName: 'FT Attempted', width: 85, editable: false },
-    { field: 'oreb', headerName: 'Offensive Rebounds', width: 85, editable: false },
-    { field: 'dreb', headerName: 'Defensive Rebounds', width: 85, editable: false },
-    { field: 'pf', headerName: 'Personal Fouls', width: 85, editable: false },
-    { field: 'min', headerName: 'Minutes', width: 85, editable: false },
-      {
+    { field: 'fg3m', headerName: '3s Made', width: 85, editable: false, selected: true },
+    { field: 'fg3a', headerName: '3s Att.', width: 85, editable: false, selected: true },
+    { field: 'fg3_pct', headerName: '3s %', width: 85, editable: false },
+    { field: 'ftm', headerName: 'FT Made', width: 85, editable: false, selected: true },
+    { field: 'fta', headerName: 'FT Att.', width: 85, editable: false },
+    { field: 'ft_pct', headerName: 'FT %', width: 85, editable: false },
+    { field: 'oreb', headerName: 'Off. Reb', width: 85, editable: false, selected: true },
+    { field: 'dreb', headerName: 'Def. Reb', width: 85, editable: false, selected: true },
+    { field: 'pf', headerName: 'Fouls', width: 85, editable: false, selected: true },
+    { field: 'min', headerName: 'Minutes', width: 85, editable: false, selected: true },
+    {
       field: 'opposing_team_full_name',
       headerName: 'Opposing Team',
       width: 200,
       editable: false,
+      selected: false,
     },
     {
       field: 'postseason',
       headerName: 'Postseason Game',
       width: 150,
       editable: false,
+      selected: false,
     },
   ];
 
@@ -161,7 +163,7 @@ export function addDates(request, dates) {
     request['end_date'] = dates[1];
   }
 }
-  
+
 export function addPagination(request, paginationModel) {
   request['offset'] = paginationModel.page * paginationModel.pageSize;
   request['limit'] = paginationModel.pageSize;

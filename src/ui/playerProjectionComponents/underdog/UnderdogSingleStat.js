@@ -12,36 +12,36 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { Tooltip } from '@material-ui/core';
-import { addMinFilter, addSelectedPlayer, addOpposingTeam, addPagination, createRequestBody } from '../../util/mappingUtil';
-import { ABBREVIATION_TO_TEAM_ID, LOCAL_HOST, PLAYER_PROPS_AGAINST_OPPONENT_API, PLAYER_PROPS_API } from '../../constants/propConstants';
+import { addMinFilter, addSelectedPlayer, addOpposingTeam, addPagination, createRequestBody } from '../../../util/mappingUtil';
+import { ABBREVIATION_TO_TEAM_ID, LOCAL_HOST, PLAYER_PROPS_AGAINST_OPPONENT_UNDERDOG_API } from '../../../constants/propConstants';
 
 import axios from 'axios';
 
-const ProjectionsForSingleStat = ({ projections }) => {
+const UnderdogSingleStat = ({ projections }) => {
   const [open, setOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState({})
   const [againstOpponentStats, setAgainstOpponentStats] = useState([])
 
   useEffect(() => {
-    async function fetchStatsAgainstOpponent() {      
-      if (open && !modalInfo.statType.includes('Combo')) {
+    async function fetchStatsAgainstOpponent() {
+      if (open) {
         let request = createRequestBody();
         addSelectedPlayer(request, modalInfo.playerId)
         addOpposingTeam(request, ABBREVIATION_TO_TEAM_ID[modalInfo.opposingTeam])
         addPagination(request, { page: 0, pageSize: 10 })
         addMinFilter(request, 0)
-        let response = await axios.post(LOCAL_HOST + PLAYER_PROPS_AGAINST_OPPONENT_API,
+        let response = await axios.post(LOCAL_HOST + PLAYER_PROPS_AGAINST_OPPONENT_UNDERDOG_API,
           request,
           { params: { statType: modalInfo.statType, lineScore: modalInfo.lineScore } }
         )
+        console.log('response.data: ', response.data)
         setAgainstOpponentStats(response.data);
       }
     }
     fetchStatsAgainstOpponent()
   }, [modalInfo, open])
-
-  const handleModal = (isOpen, playerInfo) => {  
-    console.log('playerInfo: ', playerInfo)  
+  const handleModal = (isOpen, playerInfo) => {
+    console.log('playerInfo: ', playerInfo)
     if (isOpen) {
       setModalInfo(playerInfo);
     } else {
@@ -76,40 +76,50 @@ const ProjectionsForSingleStat = ({ projections }) => {
       x={props.style.x.animation.to}
       y={props.style.y.animation.to}
     />
-  }  
+  }
+
+  const createPercentage = (percentage) => {
+    let color = 'black'
+    if (percentage > 0) { color =  'green'; }
+    if (percentage < 0) { color = 'red'; }      
+    return <span style={{ color: color, fontSize: '12px' }}>{`(${percentage.toFixed(2)}%)`}</span>
+  }
 
   return (
     <div className='player-projection-container'>
-      {projections.length > 0 && projections.map(({ playerId, statType, fullName, lineScore, overStreak,
+      {projections.length > 0 && projections.map(({ playerId, teamAbbreviation, payoutMultiplier, projId, statType, fullName, lineScore, overStreak,
         overLast3, overLast5, overLast10, underStreak, underLast3, underLast5, underLast10,
-        avgLast10, avgLast5, avgLast3, trendingUp, trendingDown, lineHistory, opposingTeam, gameDate }) => (
-        <Card key={`${fullName}${statType}${playerId}`} className='player-projection-card'>
-          <CardContent>
+        avgLast10, avgLast5, avgLast3, trendingUp, trendingDown, lineHistory, avglast10LineScorePercentage,
+        avglast5LineScorePercentage, avglast3LineScorePercentage, opposingTeam, gameDate }) => (
+        <Card key={projId} className='player-projection-card'>
+          <CardContent sx={{padding: '5px'}}>
             <Typography sx={{ fontSize: '11px' }} variant="body1">vs {opposingTeam} {gameDate}</Typography>
-            <Typography variant="body1">{fullName}</Typography>
-            <Typography variant="body1">{statType}: {lineScore}</Typography>
+            <Typography sx={fontStyle} variant="body1">{fullName}</Typography>
+            <Typography sx={fontStyle} variant="body1">{statType}: {lineScore}</Typography>
+            <Typography sx={fontStyle} className={payoutMultiplier > 1 && 'hot-chili'} variant="body1">Payout Multiplier: {payoutMultiplier}</Typography>
             <br />
-            <Typography variant="body1">Average Last 3 Games: {avgLast3}</Typography>
-            <Typography variant="body1">Average Last 5 Games: {avgLast5}</Typography>
-            <Typography variant="body1">Average Last 10 Games: {avgLast10}</Typography>
+            {/* <Typography variant="body1">Avg Last 3 Games: {avgLast3} {createPercentage(avglast3LineScorePercentageopposingTeam)}</Typography> */}
+            <Typography sx={fontStyle} variant="body1">Avg Last 3 Games: {avgLast3} {createPercentage(avglast3LineScorePercentage)}</Typography>
+            <Typography sx={fontStyle} variant="body1">Avg Last 5 Games: {avgLast5} {createPercentage(avglast5LineScorePercentage)}</Typography>
+            <Typography sx={fontStyle} variant="body1">Avg Last 10 Games: {avgLast10} {createPercentage(avglast10LineScorePercentage)}</Typography>
             {trendingUp && <Typography className='trending' variant="body1">Trending Up</Typography>}
             {trendingDown && <Typography className='trending' variant="body1">Trending Down</Typography>}
             <br />
-            <Typography className={overStreak >= 3 && 'hot-streak'} variant="body1">Over Streak: {overStreak}</Typography>
-            <Typography variant="body1">Over Last 3 Games: {overLast3}</Typography>
-            <Typography variant="body1">Over Last 5 Games: {overLast5}</Typography>
-            <Typography className={overLast10 >= 7 && 'hot-streak'} variant="body1">Over Last 10 Games: {overLast10}</Typography>
+            <Typography sx={fontStyle} className={overStreak >= 3 && 'hot-streak'} variant="body1">Over Streak: {overStreak}</Typography>
+            <Typography sx={fontStyle} variant="body1">Over Last 3 Games: {overLast3}</Typography>
+            <Typography sx={fontStyle} variant="body1">Over Last 5 Games: {overLast5}</Typography>
+            <Typography sx={fontStyle} className={overLast10 >= 7 && 'hot-streak'} variant="body1">Over Last 10 Games: {overLast10}</Typography>
             <br />
-            <Typography className={underStreak >= 3 && 'hot-streak'} variant="body1">Under Streak: {underStreak}</Typography>
-            <Typography variant="body1">Under Last 3 Games: {underLast3}</Typography>
-            <Typography variant="body1">Under Last 5 Games: {underLast5}</Typography>
-            <Typography className={underLast10 >= 7 && 'hot-streak'} variant="body1">Under Last 10 Games: {underLast10}</Typography>
+            <Typography sx={fontStyle} className={underStreak >= 3 && 'hot-streak'} variant="body1">Under Streak: {underStreak}</Typography>
+            <Typography sx={{fontSize: '14px', ...fontStyle }} variant="body1">Under Last 3 Games: {underLast3}</Typography>
+            <Typography sx={{fontSize: '14px', ...fontStyle }} variant="body1">Under Last 5 Games: {underLast5}</Typography>
+            <Typography sx={fontStyle} className={underLast10 >= 7 && 'hot-streak'} variant="body1">Under Last 10 Games: {underLast10}</Typography>
             <br />
           </CardContent>
           <Button onClick={() => {
             let reverseLineHistory = [...lineHistory];
             reverseLineHistory.reverse();
-            handleModal(true, { lineHistory: reverseLineHistory, fullName, statType, lineScore, opposingTeam, playerId })
+            handleModal(true, { lineHistory: reverseLineHistory, fullName, statType, lineScore, opposingTeam, projId, playerId, teamAbbreviation })
           }}>See Player History</Button>
         </Card>
       ))}
@@ -160,10 +170,10 @@ const ProjectionsForSingleStat = ({ projections }) => {
                 <LinePlot />
                 <ChartsXAxis />
                 <ChartsYAxis axisId="props_axis_id" label={modalInfo.statType} />
-                <ChartsTooltip/>
+                <ChartsTooltip />
               </ResponsiveChartContainer>
             </div>
-            {modalInfo.statType && !modalInfo.statType.includes('Combo') && againstOpponentStats.length > 0 && 
+            {modalInfo.statType && againstOpponentStats.length > 0 &&
               <div>
                 <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }} >
                   {`${modalInfo.fullName} against ${modalInfo.opposingTeam}`}
@@ -197,7 +207,7 @@ const ProjectionsForSingleStat = ({ projections }) => {
                   <LinePlot />
                   <ChartsXAxis />
                   <ChartsYAxis axisId="against_opponent_axis_id" label={modalInfo.statType} />
-                  <ChartsTooltip/>
+                  <ChartsTooltip />
                 </ResponsiveChartContainer>
               </div>
             }
@@ -207,6 +217,8 @@ const ProjectionsForSingleStat = ({ projections }) => {
     </div>
   );
 };
+
+const fontStyle = { fontSize: '14px' }
 
 const style = {
   position: 'fixed',
@@ -222,4 +234,4 @@ const style = {
 };
 
 
-export default ProjectionsForSingleStat;
+export default UnderdogSingleStat;

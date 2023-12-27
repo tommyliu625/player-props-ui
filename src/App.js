@@ -3,7 +3,8 @@ import { HomePage } from './ui/HomePage';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PlayerProjectionPage from './ui/playerProjectionComponents/PlayerProjectionPage';
+import PrizePicksProjectionPage from './ui/playerProjectionComponents/prize-picks/PrizePicksProjectionPage';
+import UnderdogProjectionPage from './ui/playerProjectionComponents/underdog/UnderdogProjectionPage';
 import {NavBar} from './ui/NavBar';
 import {useState} from 'react'
 
@@ -19,7 +20,8 @@ function App() {
         {/* {selectedPage === "Home" ? <HomePage /> : <PlayerProjectionPage />} */}
         <Routes>
           <Route path="" element={<HomePage />} />
-          <Route path="/projections" element={<PlayerProjectionPage />} />
+          <Route path="/prize-picks-projections" element={<PrizePicksProjectionPage />} />
+          <Route path="/underdog-projections" element={<UnderdogProjectionPage />} />
         </Routes>
       </div>
     </Router>
